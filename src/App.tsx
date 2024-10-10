@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
 import TimerAndLevel from "./TimerAndLevel.tsx";
@@ -27,3 +25,4 @@ function App() {
 }
 
 export default App;
+

@@ -20,16 +20,28 @@ const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGam
             }, 1000);
         }
 
-        if (stopGame && timer !== null) {
-            clearInterval(timer);
-        }
-
         return () => {
             if (timer !== null) {
                 clearInterval(timer);
             }
         };
     }, [startGame, stopGame]);
+
+    useEffect(() => {
+        let levelTimer: ReturnType<typeof setInterval> | null = null;
+
+        if (startGame && !stopGame) {
+            levelTimer = setInterval(() => {
+                setLevel((prevLevel) => prevLevel + 1);
+            }, 60000);
+        }
+
+        return () => {
+            if (levelTimer !== null) {
+                clearInterval(levelTimer);
+            }
+        };
+    }, [startGame, stopGame, setLevel]);
 
     const formatTime = (time: number) => {
         const hours = Math.floor(time / 3600).toString().padStart(2, '0');
