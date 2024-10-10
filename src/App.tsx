@@ -3,26 +3,25 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
+import TimerAndLevel from "./TimerAndLevel.tsx";
 
 function App() {
     const [count, setCount] = useState(0);
+    const [level, setLevel] = useState(1);
+    const [stopGame, setStopGame] = useState(false);
+    const [startGame, setStartGame] = useState(false);
 
     return (
         <>
             <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo"/>
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo"/>
-                </a>
+                <div className="card">
+                    <button onClick={() => setCount((count) => count + 1)}>
+                        count is {count}
+                    </button>
+                </div>
             </div>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-            </div>
-            <GridCanvas count={count} setCount={setCount} />
+            <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame}/>
+            <GridCanvas setCount={setCount} setLevel={setLevel} startTimer={() => setStartGame(true)} stopTimer={() => setStopGame(true)} />
         </>
     );
 }

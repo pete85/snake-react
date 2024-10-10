@@ -5,9 +5,12 @@ type Position = { x: number, y: number };
 
 type GridCanvasProps = {
     setCount: React.Dispatch<React.SetStateAction<number>>;
+    setLevel: React.Dispatch<React.SetStateAction<number>>;
+    startTimer: () => void;
+    stopTimer: () => void;
 };
 
-const SnakeGame: React.FC<GridCanvasProps> = ({ setCount }) => {
+const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, stopTimer }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [direction, setDirection] = useState<Direction>(null);
     const [snake, setSnake] = useState<Position[]>([{ x: 20, y: 20 }]);
@@ -61,6 +64,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount }) => {
                         { x: 19, y: 20 },
                         { x: 18, y: 20 },
                     ]);
+                    startTimer(); // Start the timer when the snake starts moving
                 } else if (
                     (event.key === 'ArrowUp' && direction !== 'ArrowDown') ||
                     (event.key === 'ArrowDown' && direction !== 'ArrowUp') ||
@@ -179,10 +183,11 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount }) => {
     useEffect(() => {
         const speedInterval = setInterval(() => {
             setSpeed((prevSpeed) => Math.max(prevSpeed - 20, 50)); // Increase speed by reducing interval time
+            setLevel((prevLevel) => prevLevel + 1); // Increase level by 1
         }, 60000); // Every 60 seconds
 
         return () => clearInterval(speedInterval);
-    }, []);
+    }, [setLevel, direction]);
 
     // Reset the game
     const resetGame = () => {
@@ -193,6 +198,8 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount }) => {
         setFoodCount(0);
         setSpeed(200);
         setCount(0);
+        setLevel(1);
+        stopTimer();
     };
 
     return (
