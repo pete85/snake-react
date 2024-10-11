@@ -24,16 +24,28 @@ const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetState
 
     const handleUserSubmit = async (name: string) => {
         try {
-            await axios.post('https://pete85.com:8091/api/snake-game/users', {
-                name: name,
-                highest_score: 0,
-                highest_score_date: new Date().toISOString(),
-            });
-            navigate('/game');
+            // Send GET request to check if the user already exists
+            const response = await axios.get('https://pete85.com:8091/api/snake-game/users');
+            const existingUsers = response.data;
+            const userExists = existingUsers.some((user: { name: string }) => user.name === name);
+
+            if (userExists) {
+                // If user already exists, navigate to the game
+                navigate('/game');
+            } else {
+                // If user does not exist, create a new user
+                await axios.post('https://pete85.com:8091/api/snake-game/users', {
+                    name: name,
+                    highest_score: 0,
+                    highest_score_date: new Date().toISOString(),
+                });
+                navigate('/game');
+            }
         } catch (error) {
-            console.error('Error creating user:', error);
+            console.error('Error checking or creating user:', error);
         }
     };
+
 
     return (
         <User
