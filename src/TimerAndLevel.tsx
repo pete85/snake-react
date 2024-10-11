@@ -23,9 +23,6 @@ const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGam
     useEffect(() => {
         let timer: ReturnType<typeof setInterval> | null = null;
 
-        console.log('Start game: ', startGame);
-        console.log('Stop game: ', stopGame);
-
         if (startGame && !stopGame) {
             timer = setInterval(() => {
                 setTime((prevTime) => prevTime + 1);

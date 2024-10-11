@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
 import TimerAndLevel from "./TimerAndLevel.tsx";
+import User from "./User.tsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -9,6 +10,9 @@ function App() {
     const [stopGame, setStopGame] = useState(false);
     const [startGame, setStartGame] = useState(false);
     const [reset, setReset] = useState(false);
+    const [username, setUsername] = useState('');
+
+    console.log('Count: ', count);
 
     const resetGame = () => {
         setStopGame(true);
@@ -26,7 +30,9 @@ function App() {
 
     return (
         <>
+            <User setUsername={setUsername} />
             <div>
+                <h2>User: {username}</h2>
                 <h1>Score: {count}</h1>
             </div>
             <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame} reset={reset} />
