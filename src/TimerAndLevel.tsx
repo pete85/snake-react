@@ -5,11 +5,17 @@ type TimerAndLevelProps = {
     setLevel: React.Dispatch<React.SetStateAction<number>>;
     startGame: boolean;
     stopGame: boolean;
+    reset: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGame, stopGame }) => {
+const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGame, stopGame, reset }) => {
     const [time, setTime] = useState(0);
+
+    useEffect(() => {
+        if (reset) {
+            setTime(0);
+        }
+    }, [reset]);
 
     useEffect(() => {
         let timer: ReturnType<typeof setInterval> | null = null;
