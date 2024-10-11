@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {appConfig} from "./app-config.ts";
 
 type Direction = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | null;
 type Position = { x: number, y: number };
@@ -8,7 +9,9 @@ type GridCanvasProps = {
     setLevel: React.Dispatch<React.SetStateAction<number>>;
     startTimer: () => void;
     stopTimer: () => void;
+    resetTimer: () => void; // Add this line
 };
+
 
 const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, stopTimer }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -173,7 +176,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
 
             const timeout = setTimeout(() => {
                 setSpecialFood(null);
-            }, 5000); // Special food disappears after 5 seconds
+            }, appConfig.specialFoodInterval); // Special food disappears after 5 seconds
 
             return () => clearTimeout(timeout);
         }
@@ -188,7 +191,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
                 return newSpeed;
             });
             setLevel((prevLevel) => prevLevel + 1);
-        }, 30000); // Every 30 seconds
+        }, appConfig.levelInterval); // Every 30 seconds
 
         return () => clearInterval(speedInterval);
     }, [setLevel]);

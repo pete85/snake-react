@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {appConfig} from "./app-config.ts";
 
 type TimerAndLevelProps = {
     level: number;
@@ -11,18 +12,29 @@ type TimerAndLevelProps = {
 const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGame, stopGame, reset }) => {
     const [time, setTime] = useState(0);
 
+    // Handle timer reset
     useEffect(() => {
         if (reset) {
             setTime(0);
         }
     }, [reset]);
 
+    // Timer for game time
     useEffect(() => {
         let timer: ReturnType<typeof setInterval> | null = null;
+
+        console.log('Start game: ', startGame);
+        console.log('Stop game: ', stopGame);
 
         if (startGame && !stopGame) {
             timer = setInterval(() => {
                 setTime((prevTime) => prevTime + 1);
+            }, 1000);
+        }
+
+        if (stopGame) {
+            timer = setInterval(() => {
+                setTime(0);
             }, 1000);
         }
 
@@ -33,13 +45,14 @@ const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGam
         };
     }, [startGame, stopGame]);
 
+    // Level timer (increase every minute)
     useEffect(() => {
         let levelTimer: ReturnType<typeof setInterval> | null = null;
 
         if (startGame && !stopGame) {
             levelTimer = setInterval(() => {
                 setLevel((prevLevel) => prevLevel + 1);
-            }, 60000);
+            }, appConfig.levelInterval);
         }
 
         return () => {
