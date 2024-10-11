@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {appConfig} from "./app-config.ts";
+import { appConfig } from './app-config.ts';
 
 type Direction = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | null;
 type Position = { x: number, y: number };
@@ -12,8 +12,7 @@ type GridCanvasProps = {
     resetTimer: () => void; // Add this line
 };
 
-
-const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, stopTimer }) => {
+const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, stopTimer, resetTimer }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [direction, setDirection] = useState<Direction>(null);
     const [snake, setSnake] = useState<Position[]>([{ x: 20, y: 20 }]);
@@ -67,6 +66,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
                         { x: 19, y: 20 },
                         { x: 18, y: 20 },
                     ]);
+                    resetTimer(); // Reset the timer before starting
                     startTimer(); // Start the timer when the snake starts moving
                 } else if (
                     (event.key === 'ArrowUp' && direction !== 'ArrowDown') ||
@@ -161,7 +161,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
             setFood({ x, y });
         };
 
-        const foodInterval = setInterval(placeFood, 10000);
+        const foodInterval = setInterval(placeFood, appConfig.foodInterval);
         placeFood(); // Place the first food immediately
 
         return () => clearInterval(foodInterval);
@@ -176,22 +176,18 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
 
             const timeout = setTimeout(() => {
                 setSpecialFood(null);
-            }, appConfig.specialFoodInterval); // Special food disappears after 5 seconds
+            }, appConfig.specialFoodInterval); // Special food disappears after 8 seconds
 
             return () => clearTimeout(timeout);
         }
     }, [foodCount]);
 
-    // Increase speed every 30 seconds
+    // Increase speed every minute
     useEffect(() => {
         const speedInterval = setInterval(() => {
-            setSpeed((prevSpeed) => {
-                const newSpeed = Math.max(prevSpeed - 20, 50);
-                console.log('Speed increased, new speed:', newSpeed);
-                return newSpeed;
-            });
+            setSpeed((prevSpeed) => Math.max(prevSpeed - 20, 50)); // Increase speed by reducing interval time
             setLevel((prevLevel) => prevLevel + 1);
-        }, appConfig.levelInterval); // Every 30 seconds
+        }, appConfig.levelInterval);
 
         return () => clearInterval(speedInterval);
     }, [setLevel]);
@@ -207,6 +203,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         setCount(0);
         setLevel(1);
         stopTimer();
+        resetTimer();
     };
 
     return (
