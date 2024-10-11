@@ -20,7 +20,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
     const [food, setFood] = useState<Position | null>(null);
     const [specialFood, setSpecialFood] = useState<Position | null>(null);
     const [foodCount, setFoodCount] = useState(0);
-    const [speed, setSpeed] = useState(200);
+    const [speed, setSpeed] = useState(appConfig.gameStartSpeed);
 
     const cellSize = 10;
     const canvasSize = 400;
@@ -203,7 +203,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         setFood(null);
         setSpecialFood(null);
         setFoodCount(0);
-        setSpeed(200);
+        setSpeed(appConfig.gameStartSpeed);
         setCount(0);
         setLevel(1);
         stopTimer();
