@@ -162,7 +162,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         placeFood(); // Place the first food immediately
 
         return () => clearInterval(foodInterval);
-    }, []);
+    }, []); // Note that this effect should only run once, so it doesn't depend on any state
 
     // Place special food every 5th regular food eaten
     useEffect(() => {
@@ -179,15 +179,19 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         }
     }, [foodCount]);
 
-    // Increase speed every minute
+    // Increase speed every 30 seconds
     useEffect(() => {
         const speedInterval = setInterval(() => {
-            setSpeed((prevSpeed) => Math.max(prevSpeed - 20, 50)); // Increase speed by reducing interval time
-            setLevel((prevLevel) => prevLevel + 1); // Increase level by 1
-        }, 60000); // Every 60 seconds
+            setSpeed((prevSpeed) => {
+                const newSpeed = Math.max(prevSpeed - 20, 50);
+                console.log('Speed increased, new speed:', newSpeed);
+                return newSpeed;
+            });
+            setLevel((prevLevel) => prevLevel + 1);
+        }, 30000); // Every 30 seconds
 
         return () => clearInterval(speedInterval);
-    }, [setLevel, direction]);
+    }, [setLevel]);
 
     // Reset the game
     const resetGame = () => {

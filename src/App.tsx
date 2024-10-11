@@ -12,11 +12,7 @@ function App() {
     return (
         <>
             <div>
-                <div className="card">
-                    <button onClick={() => setCount((count) => count + 1)}>
-                        count is {count}
-                    </button>
-                </div>
+                <h2>Score: {count}</h2>
             </div>
             <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame}/>
             <GridCanvas setCount={setCount} setLevel={setLevel} startTimer={() => setStartGame(true)} stopTimer={() => setStopGame(true)} />
