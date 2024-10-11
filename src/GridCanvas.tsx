@@ -21,8 +21,8 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
     const [foodCount, setFoodCount] = useState(0);
     const [speed, setSpeed] = useState(appConfig.gameStartSpeed);
 
-    const cellSize = 10;
-    const canvasSize = 400;
+    const cellSize = appConfig.cellSize;
+    const canvasSize = appConfig.canvasSize;
 
     // Draw the snake, food, and special food on the canvas
     useEffect(() => {

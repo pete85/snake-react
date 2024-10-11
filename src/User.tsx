@@ -13,7 +13,7 @@ const User: React.FC<UserProps> = ({ setUsername }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setUsername(inputValue);
+        setUsername(inputValue); // Set the username when the form is submitted
     };
 
     return (
