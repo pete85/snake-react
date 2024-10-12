@@ -31,6 +31,7 @@ const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetState
 
             if (userExists) {
                 // If user already exists, navigate to the game
+                setUsername(name);
                 navigate('/game');
             } else {
                 // If user does not exist, create a new user
@@ -39,13 +40,13 @@ const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetState
                     highest_score: 0,
                     highest_score_date: new Date().toISOString(),
                 });
+                setUsername(name);
                 navigate('/game');
             }
         } catch (error) {
             console.error('Error checking or creating user:', error);
         }
     };
-
 
     return (
         <User
@@ -57,7 +58,6 @@ const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetState
     );
 };
 
-
 const Game = ({ username }: { username: string }) => {
     const [count, setCount] = useState(0);
     const [level, setLevel] = useState(1);
@@ -65,19 +65,48 @@ const Game = ({ username }: { username: string }) => {
     const [startGame, setStartGame] = useState(false);
     const [reset, setReset] = useState(false);
 
-    const resetGame = () => {
-        setStopGame(true);
-        setStartGame(false);
-        setReset(true); // Set reset to true to trigger the timer reset
+    const resetGame = async () => {
+        // Record the highest score before resetting the game
+        try {
+            console.log('Fetching users to find current player...');
+            const response = await axios.get('https://pete85.com:8091/api/snake-game/users');
+            const user = response.data.find((user: { name: string }) => user.name === username);
 
-        // Delay reset to avoid React warning about updating state during render
+            if (user) {
+                console.log(`User found: ${user.name} with current highest score: ${user.highest_score}`);
+                if (count > user.highest_score) {
+                    console.log(`Updating highest score for user: ${user.name}, new score: ${count}`);
+                    await axios.put(`https://pete85.com:8091/api/snake-game/users/${user._id}`, {
+                        highest_score: count,
+                        highest_score_date: new Date().toISOString(),
+                    });
+                    console.log('Highest score updated successfully');
+                } else {
+                    console.log('No need to update the highest score. Current score is not higher.');
+                }
+            } else {
+                console.error('User not found. Skipping score update.');
+            }
+        } catch (error) {
+            console.error('Error updating highest score:', error);
+        }
+
+        // Proceed with resetting the game state after a delay to avoid updating state during render
         setTimeout(() => {
-            setCount(0);
-            setLevel(1);
-            setStopGame(false);
-            setReset(false); // Set reset back to false after resetting
-        }, 100);
+            setStopGame(true);
+            setStartGame(false);
+            setReset(true); // Set reset to true to trigger the timer reset
+
+            // Delay further to reset game variables
+            setTimeout(() => {
+                setCount(0);
+                setLevel(1);
+                setStopGame(false);
+                setReset(false); // Set reset back to false after resetting
+            }, 100);
+        }, 0);
     };
+
 
     return (
         <>

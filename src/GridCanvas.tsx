@@ -9,7 +9,7 @@ type GridCanvasProps = {
     setLevel: React.Dispatch<React.SetStateAction<number>>;
     startTimer: () => void;
     stopTimer: () => void;
-    resetTimer: () => void; // Add this line
+    resetTimer: () => void;
 };
 
 const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, stopTimer, resetTimer }) => {
@@ -20,6 +20,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
     const [specialFood, setSpecialFood] = useState<Position | null>(null);
     const [foodCount, setFoodCount] = useState(0);
     const [speed, setSpeed] = useState(appConfig.gameStartSpeed);
+    const [gameOver, setGameOver] = useState(false);
 
     const cellSize = appConfig.cellSize;
     const canvasSize = appConfig.canvasSize;
@@ -110,23 +111,17 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
                             break;
                     }
 
-                    // Check for collisions with the canvas edges
+                    // Check for collisions with the canvas edges or itself
                     if (
                         newHead.x < 0 ||
                         newHead.y < 0 ||
                         newHead.x * cellSize >= canvasSize ||
-                        newHead.y * cellSize >= canvasSize
+                        newHead.y * cellSize >= canvasSize ||
+                        newSnake.some(segment => segment.x === newHead.x && segment.y === newHead.y)
                     ) {
-                        // Reset the snake to the center with 1 segment
-                        resetGame();
-                        return [{ x: 20, y: 20 }];
-                    }
-
-                    // Check for collisions with itself
-                    if (newSnake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
-                        // Reset the snake to the center with 1 segment
-                        resetGame();
-                        return [{ x: 20, y: 20 }];
+                        // Set gameOver flag instead of directly resetting the game
+                        setGameOver(true);
+                        return prevSnake;
                     }
 
                     // Check if the snake eats the food
@@ -153,7 +148,16 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         }
     }, [direction, food, specialFood, setCount, speed]);
 
-    // Place food on the canvas every 10 seconds
+    // Reset the game when gameOver is true
+    useEffect(() => {
+        if (gameOver) {
+            setTimeout(() => {
+                resetGame();
+            }, 0);
+        }
+    }, [gameOver]);
+
+    // Place food on the canvas after reset or when the game starts
     useEffect(() => {
         const placeFood = () => {
             const x = Math.floor(Math.random() * (canvasSize / cellSize));
@@ -161,11 +165,12 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
             setFood({ x, y });
         };
 
+        placeFood(); // Place initial food
+
         const foodInterval = setInterval(placeFood, appConfig.foodInterval);
-        placeFood(); // Place the first food immediately
 
         return () => clearInterval(foodInterval);
-    }, []); // Note that this effect should only run once, so it doesn't depend on any state
+    }, [gameOver]); // Run food placement when the game resets
 
     // Place special food every 5th regular food eaten
     useEffect(() => {
@@ -192,7 +197,7 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         return () => clearInterval(speedInterval);
     }, [setLevel]);
 
-    // Reset the game
+    // Reset the game function
     const resetGame = () => {
         setDirection(null);
         setSnake([{ x: 20, y: 20 }]);
@@ -204,6 +209,12 @@ const SnakeGame: React.FC<GridCanvasProps> = ({ setCount, setLevel, startTimer, 
         setLevel(1);
         stopTimer();
         resetTimer();
+        setGameOver(false); // Reset the gameOver flag
+
+        // Place new food after game reset
+        const x = Math.floor(Math.random() * (canvasSize / cellSize));
+        const y = Math.floor(Math.random() * (canvasSize / cellSize));
+        setFood({ x, y });
     };
 
     return (
