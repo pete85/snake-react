@@ -19,7 +19,7 @@ function App() {
                     path="/game"
                     element={
                         <ProtectedRoute user={user}>
-                            <Game user={user} />
+                            <Game user={user} setUser={setUser} />
                         </ProtectedRoute>
                     }
                 />
@@ -80,7 +80,7 @@ const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<U
 
 
 
-const Game = ({ user }: { user: UserModel }) => {
+const Game = ({ user, setUser }: { user: UserModel; setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
     const [count, setCount] = useState(0);
     const [level, setLevel] = useState(1);
     const [stopGame, setStopGame] = useState(false);
@@ -94,6 +94,10 @@ const Game = ({ user }: { user: UserModel }) => {
                     highest_score: count,
                     highest_score_date: new Date().toISOString(),
                 });
+
+                // Fetch updated user data
+                const updatedUserResponse = await axios.get(`https://pete85.com:8091/api/snake-game/users/${user._id}`);
+                setUser(updatedUserResponse.data); // Update user state with new data
             }
         } catch (error) {
             console.error('Error updating highest score:', error);
@@ -110,6 +114,7 @@ const Game = ({ user }: { user: UserModel }) => {
             setReset(false);
         }, 100);
     };
+
 
     return (
         <>
