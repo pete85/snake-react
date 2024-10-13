@@ -3,10 +3,11 @@ import axios from 'axios';
 import { UserModel } from './models/user';
 
 type HighestScoresProps = {
-    limit?: number; // Optional limit prop to control the number of top users
+    limit?: number;
+    gameFinished: boolean; // New prop to trigger refresh
 };
 
-const HighestScores: React.FC<HighestScoresProps> = ({ limit = 10 }) => {
+const HighestScores: React.FC<HighestScoresProps> = ({ limit = 10, gameFinished }) => {
     const [highestScoreUsers, setHighestScoreUsers] = useState<UserModel[]>([]);
 
     useEffect(() => {
@@ -14,7 +15,7 @@ const HighestScores: React.FC<HighestScoresProps> = ({ limit = 10 }) => {
             try {
                 const response = await axios.get(`https://pete85.com:8091/api/snake-game/users/top-scores?limit=${limit}`);
                 if (response.status === 200 && response.data.length) {
-                    setHighestScoreUsers(response.data); // Set top users in state
+                    setHighestScoreUsers(response.data);
                 }
             } catch (error) {
                 console.error('Error fetching highest scores:', error);
@@ -22,7 +23,7 @@ const HighestScores: React.FC<HighestScoresProps> = ({ limit = 10 }) => {
         };
 
         fetchHighestScores();
-    }, [limit]); // Re-fetch if limit changes
+    }, [limit, gameFinished]); // Re-fetch if gameFinished or limit changes
 
     return (
         <div className="highest-scores">

@@ -58,12 +58,14 @@ const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<U
     );
 };
 
-const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
+const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispatch<React.SetStateAction<UserModel | null>> }) => {
     const [count, setCount] = useState(0);
     const [level, setLevel] = useState(1);
     const [stopGame, setStopGame] = useState(false);
     const [startGame, setStartGame] = useState(false);
     const [reset, setReset] = useState(false);
+    const [gameFinished, setGameFinished] = useState(false);
+    const navigate = useNavigate(); // Initialize navigate
 
     const resetGame = async () => {
         try {
@@ -78,21 +80,37 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
         } catch (error) {
             console.error('Error updating highest score:', error);
         }
+
         setStopGame(true);
         setStartGame(false);
         setReset(true);
+        setGameFinished(true);
+
         setTimeout(() => {
             setCount(0);
             setLevel(1);
             setStopGame(false);
             setReset(false);
+            setGameFinished(false);
         }, 100);
+    };
+
+    // Define switchUser function to reset user and game
+    const switchUser = () => {
+        setCount(0);
+        setLevel(1);
+        setStopGame(false);
+        setStartGame(false);
+        setReset(false);
+        setGameFinished(false);
+        setUser(null); // Clear the current user
+        navigate('/'); // Redirect to home
     };
 
     return (
         <>
             <div className="tw-absolute tw-top-5 tw-left-5">
-                <button>Switch user</button>
+                <button onClick={switchUser}>Switch user</button>
             </div>
             <div>
                 <h2>User: {user?.name}</h2>
@@ -100,7 +118,7 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
                 <h3>Highest: {user?.highest_score}</h3>
             </div>
             <div className="tw-absolute tw-right-5 tw-top-5 highest-scores">
-                <HighestScores limit={10} /> {/* Use HighestScores with limit prop */}
+                <HighestScores limit={10} gameFinished={gameFinished} />
             </div>
             <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame} reset={reset} />
             <GridCanvas
@@ -116,5 +134,6 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
         </>
     );
 };
+
 
 export default App;
