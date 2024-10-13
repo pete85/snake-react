@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useEffect, useState } from 'react';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
 import TimerAndLevel from "./TimerAndLevel.tsx";
@@ -6,10 +6,11 @@ import User from "./User.tsx";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ProtectedRoute from "./ProtectedRoute.tsx";
-import {UserModel} from "./models/user.ts";
+import { UserModel } from "./models/user.ts";
+import HighestScores from "./HighestScores.tsx"; // Imported component
 
 function App() {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState<UserModel | null>(null);
 
     return (
         <Router>
@@ -30,21 +31,12 @@ function App() {
 
 const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
     const navigate = useNavigate();
-    const [existingUsers, setExistingUsers] = useState([]);
+    const [existingUsers, setExistingUsers] = useState<UserModel[]>([]);
 
     const handleUserSearch = async (name: string) => {
         try {
-            if (name && name !== '') {
-                const response = await axios.get(`https://pete85.com:8091/api/snake-game/users/search?name=${name}`);
-                if (response.status === 200 && response.data.length) {
-                    setExistingUsers(response.data);
-                    console.log('Users with partial name:', response.data);
-                } else {
-                    setExistingUsers([]); // Clear if no results
-                }
-            } else {
-                setExistingUsers([]);
-            }
+            const response = await axios.get(`https://pete85.com:8091/api/snake-game/users/search?name=${name}`);
+            setExistingUsers(response.data || []);
         } catch (error) {
             console.error(error);
         }
@@ -52,35 +44,21 @@ const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<U
 
     const handleUserSubmit = async (name: string) => {
         try {
-            const newUser = {
-                name: name,
-                highest_score: 0,
-                highest_score_date: new Date().toISOString(),
-            };
-
+            const newUser = { name, highest_score: 0, highest_score_date: new Date().toISOString() };
             const response = await axios.post('https://pete85.com:8091/api/snake-game/users', newUser);
-
             setUser(response.data);
             navigate('/game');
         } catch (error) {
-            console.error('Error checking or creating user:', error);
+            console.error('Error creating user:', error);
         }
     };
 
-
     return (
-        <User
-            setUser={setUser}
-            handleUserSubmit={handleUserSubmit}
-            handleUserSearch={handleUserSearch}
-            existingUsers={existingUsers}
-        />
+        <User setUser={setUser} handleUserSubmit={handleUserSubmit} handleUserSearch={handleUserSearch} existingUsers={existingUsers} />
     );
 };
 
-
-
-const Game = ({ user, setUser }: { user: UserModel; setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
+const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
     const [count, setCount] = useState(0);
     const [level, setLevel] = useState(1);
     const [stopGame, setStopGame] = useState(false);
@@ -94,19 +72,15 @@ const Game = ({ user, setUser }: { user: UserModel; setUser: React.Dispatch<Reac
                     highest_score: count,
                     highest_score_date: new Date().toISOString(),
                 });
-
-                // Fetch updated user data
                 const updatedUserResponse = await axios.get(`https://pete85.com:8091/api/snake-game/users/${user._id}`);
-                setUser(updatedUserResponse.data); // Update user state with new data
+                setUser(updatedUserResponse.data);
             }
         } catch (error) {
             console.error('Error updating highest score:', error);
         }
-
         setStopGame(true);
         setStartGame(false);
         setReset(true);
-
         setTimeout(() => {
             setCount(0);
             setLevel(1);
@@ -115,25 +89,20 @@ const Game = ({ user, setUser }: { user: UserModel; setUser: React.Dispatch<Reac
         }, 100);
     };
 
-
     return (
         <>
             <div className="tw-absolute tw-top-5 tw-left-5">
                 <button>Switch user</button>
             </div>
             <div>
-                <h2>User: {user.name}</h2>
+                <h2>User: {user?.name}</h2>
                 <h1>Score: {count}</h1>
-                <h3>Highest: {user.highest_score}</h3>
-
+                <h3>Highest: {user?.highest_score}</h3>
             </div>
-            <TimerAndLevel
-                level={level}
-                setLevel={setLevel}
-                startGame={startGame}
-                stopGame={stopGame}
-                reset={reset}
-            />
+            <div className="tw-absolute tw-right-5 tw-top-5 highest-scores">
+                <HighestScores limit={10} /> {/* Use HighestScores with limit prop */}
+            </div>
+            <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame} reset={reset} />
             <GridCanvas
                 setCount={setCount}
                 setLevel={setLevel}

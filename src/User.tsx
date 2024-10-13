@@ -42,7 +42,7 @@ const User: React.FC<UserProps> = ({ setUser, handleUserSubmit, handleUserSearch
             </div>
             {existingUsers.length > 0 ? (
                 <div className="tw-flex tw-w-full">
-                    <ul className="users-list">
+                    <ul className="user-select-list">
                         {existingUsers.map((user) => (
                             <li key={user._id} className="tw-flex items-center">
                                 <button className="tw-w-full" onClick={() => handleUserSelect(user)}>
