@@ -54,7 +54,7 @@ const User: React.FC<UserProps> = ({ setUser, handleUserSubmit, handleUserSearch
                 </div>
             ) : (
                 <div className="tw-flex tw-w-full">
-                    <button onClick={handleClick} className="tw-w-full">Create User</button>
+                    <button onClick={handleClick} className="tw-w-full" disabled={inputValue === ''}>Create User</button>
                 </div>
             )}
         </>
