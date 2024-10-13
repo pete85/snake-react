@@ -6,19 +6,20 @@ import User from "./User.tsx";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import {UserModel} from "./models/user.ts";
 
 function App() {
-    const [username, setUsername] = useState('');
+    const [user, setUser] = useState({});
 
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<UserSetup setUsername={setUsername} />} />
+                <Route path="/" element={<UserSetup setUser={setUser} />} />
                 <Route
                     path="/game"
                     element={
-                        <ProtectedRoute username={username}>
-                            <Game username={username} />
+                        <ProtectedRoute user={user}>
+                            <Game user={user} />
                         </ProtectedRoute>
                     }
                 />
@@ -27,7 +28,7 @@ function App() {
     );
 }
 
-const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetStateAction<string>> }) => {
+const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
     const navigate = useNavigate();
     const [existingUsers, setExistingUsers] = useState([]);
 
@@ -51,21 +52,25 @@ const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetState
 
     const handleUserSubmit = async (name: string) => {
         try {
-            await axios.post('https://pete85.com:8091/api/snake-game/users', {
+            const newUser = {
                 name: name,
                 highest_score: 0,
                 highest_score_date: new Date().toISOString(),
-            });
-            setUsername(name);
+            };
+
+            const response = await axios.post('https://pete85.com:8091/api/snake-game/users', newUser);
+
+            setUser(response.data);
             navigate('/game');
         } catch (error) {
             console.error('Error checking or creating user:', error);
         }
     };
 
+
     return (
         <User
-            setUsername={setUsername}
+            setUser={setUser}
             handleUserSubmit={handleUserSubmit}
             handleUserSearch={handleUserSearch}
             existingUsers={existingUsers}
@@ -75,7 +80,7 @@ const UserSetup = ({ setUsername }: { setUsername: React.Dispatch<React.SetState
 
 
 
-const Game = ({ username }: { username: string }) => {
+const Game = ({ user }: { user: UserModel }) => {
     const [count, setCount] = useState(0);
     const [level, setLevel] = useState(1);
     const [stopGame, setStopGame] = useState(false);
@@ -84,14 +89,17 @@ const Game = ({ username }: { username: string }) => {
 
     const resetGame = async () => {
         try {
-            const response = await axios.get('https://pete85.com:8091/api/snake-game/users');
-            const user = response.data.find((user: { name: string }) => user.name === username);
+            // const response = await axios.get('https://pete85.com:8091/api/snake-game/users');
+            // const user = response.data.find((user: { name: string }) => user.name === user.name);
 
-            if (user && count > user.highest_score) {
+            if (user && count > (user.highest_score ?? 0)) {
+                console.log('Got here with user: ', user);
                 await axios.put(`https://pete85.com:8091/api/snake-game/users/${user._id}`, {
                     highest_score: count,
                     highest_score_date: new Date().toISOString(),
                 });
+            } else {
+                console.log('Got nowhere with user: ', user);
             }
         } catch (error) {
             console.error('Error updating highest score:', error);
@@ -112,7 +120,7 @@ const Game = ({ username }: { username: string }) => {
     return (
         <>
             <div>
-                <h2>User: {username}</h2>
+                <h2>User: {user.name}</h2>
                 <h1>Score: {count}</h1>
                 {/*<h3>Highest: {user.highest_score}</h3>*/}
 

@@ -2,23 +2,21 @@ import React, {useState} from 'react';
 import {UserModel} from "./models/user.ts";
 
 type UserProps = {
-    setUsername: React.Dispatch<React.SetStateAction<string>>;
+    setUser: React.Dispatch<React.SetStateAction<UserModel>>;
     handleUserSubmit: (name: string) => void;
     handleUserSearch: (name: string) => void;
     existingUsers: UserModel[];
 };
 
-const User: React.FC<UserProps> = ({setUsername, handleUserSubmit, handleUserSearch, existingUsers}) => {
+const User: React.FC<UserProps> = ({handleUserSubmit, handleUserSearch, existingUsers}) => {
     const [inputValue, setInputValue] = useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
-
-        console.log('handleChange name: ', event.target.value);
         handleUserSearch(name);
 
         setInputValue(name);
-        setUsername(name);
+        // setUser(name);
     };
 
     const handleClick = () => {
