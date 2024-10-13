@@ -5,7 +5,7 @@ module.exports = {
   },
   prefix: 'tw-',
   content: [
-    "./src/**/*.{html,ts, tsx, js, jsx}",
+    "./src/**/*.{html,js,jsx,ts,tsx}"
   ],
   theme: {
     extend: {},

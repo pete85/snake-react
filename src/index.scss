@@ -81,3 +81,30 @@ button:focus-visible {
     opacity: 1;
   }
 }
+
+.users-list {
+  list-style-type: none;
+  li {
+    cursor: pointer;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.username-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid theme('colors.slate.200');
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+  margin-bottom: 20px;
+
+  /* Styling for focus */
+  &:focus, &:hover {
+    border-color: theme('colors.lime.600');
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+}
