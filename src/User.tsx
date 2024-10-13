@@ -16,24 +16,36 @@ const User: React.FC<UserProps> = ({handleUserSubmit, handleUserSearch, existing
         handleUserSearch(name);
 
         setInputValue(name);
-        // setUser(name);
     };
 
     const handleClick = () => {
         handleUserSubmit(inputValue);
     };
 
+    const handleUserSelect = () => {
+        setUser(name);
+    }
+
     return (
         <>
             <div className="tw-flex tw-w-full">
-                <input type="text" value={inputValue} onChange={handleChange} placeholder="Enter your username"
-                       className="username-input"/>
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleChange}
+                    placeholder="Enter your username"
+                    className="username-input"
+                />
             </div>
-            {(existingUsers.length > 0) ? (
+            {existingUsers.length > 0 ? (
                 <div className="tw-flex tw-w-full">
                     <ul className="users-list">
                         {existingUsers.map((user) => (
-                            <li key={user._id}>{user.name}</li>
+                            <li key={user._id} className="tw-flex items-center">
+                                <button className="tw-w-full" onClick={handleUserSelect}>
+                                    <span>{user.name}</span>
+                                </button>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -42,6 +54,7 @@ const User: React.FC<UserProps> = ({handleUserSubmit, handleUserSearch, existing
                     <button onClick={handleClick} className="tw-w-full">Create User</button>
                 </div>
             )}
+
         </>
     );
 };

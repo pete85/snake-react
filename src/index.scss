@@ -84,11 +84,11 @@ button:focus-visible {
 
 .users-list {
   list-style-type: none;
+  width: 100%;
+  padding-left: unset;
   li {
     cursor: pointer;
-    &:hover {
-      opacity: 0.7;
-    }
+    margin-bottom: 15px;
   }
 }
 
@@ -107,4 +107,12 @@ button:focus-visible {
     border-color: theme('colors.lime.600');
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
+}
+
+.hover-show {
+  display: none;
+}
+
+li:hover .hover-show {
+  display: inline;
 }

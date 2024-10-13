@@ -89,17 +89,11 @@ const Game = ({ user }: { user: UserModel }) => {
 
     const resetGame = async () => {
         try {
-            // const response = await axios.get('https://pete85.com:8091/api/snake-game/users');
-            // const user = response.data.find((user: { name: string }) => user.name === user.name);
-
             if (user && count > (user.highest_score ?? 0)) {
-                console.log('Got here with user: ', user);
                 await axios.put(`https://pete85.com:8091/api/snake-game/users/${user._id}`, {
                     highest_score: count,
                     highest_score_date: new Date().toISOString(),
                 });
-            } else {
-                console.log('Got nowhere with user: ', user);
             }
         } catch (error) {
             console.error('Error updating highest score:', error);
@@ -119,10 +113,13 @@ const Game = ({ user }: { user: UserModel }) => {
 
     return (
         <>
+            <div className="tw-absolute tw-top-5 tw-left-5">
+                <button>Switch user</button>
+            </div>
             <div>
                 <h2>User: {user.name}</h2>
                 <h1>Score: {count}</h1>
-                {/*<h3>Highest: {user.highest_score}</h3>*/}
+                <h3>Highest: {user.highest_score}</h3>
 
             </div>
             <TimerAndLevel
