@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/gridcanvas.tsx","./src/highestscores.tsx","./src/protectedroute.tsx","./src/timerandlevel.tsx","./src/usefullinks.tsx","./src/user.tsx","./src/app-config.ts","./src/main.tsx","./src/vite-env.d.ts","./src/models/user.ts"],"errors":true,"version":"5.6.3"}

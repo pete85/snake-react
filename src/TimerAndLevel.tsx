@@ -9,38 +9,7 @@ type TimerAndLevelProps = {
     reset: boolean;
 };
 
-const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGame, stopGame, reset }) => {
-    const [time, setTime] = useState(0);
-
-    // Handle timer reset
-    useEffect(() => {
-        if (reset) {
-            setTime(0);
-        }
-    }, [reset]);
-
-    // Timer for game time
-    useEffect(() => {
-        let timer: ReturnType<typeof setInterval> | null = null;
-
-        if (startGame && !stopGame) {
-            timer = setInterval(() => {
-                setTime((prevTime) => prevTime + 1);
-            }, 1000);
-        }
-
-        if (stopGame) {
-            timer = setInterval(() => {
-                setTime(0);
-            }, 1000);
-        }
-
-        return () => {
-            if (timer !== null) {
-                clearInterval(timer);
-            }
-        };
-    }, [startGame, stopGame]);
+const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGame, stopGame }) => {
 
     // Level timer (increase every minute)
     useEffect(() => {
@@ -59,18 +28,8 @@ const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGam
         };
     }, [startGame, stopGame, setLevel]);
 
-    const formatTime = (time: number) => {
-        const hours = Math.floor(time / 3600).toString().padStart(2, '0');
-        const minutes = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
-        const seconds = (time % 60).toString().padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-    };
-
     return (
         <div className="hide-mobile">
-            {/*<div>*/}
-            {/*    <h4>Time: {formatTime(time)}</h4>*/}
-            {/*</div>*/}
             <div>
                 <h3 className="outlined-text">Level: {level}</h3>
             </div>
