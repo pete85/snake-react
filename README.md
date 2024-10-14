@@ -96,4 +96,3 @@ Each food type contributes differently to the score, and scores update both in r
 User information and high scores are stored in MongoDB, ensuring that scores are retained across sessions.
 
 This project provides an enjoyable, interactive experience with a familiar game, enhanced by modern web development practices and user personalization.
-

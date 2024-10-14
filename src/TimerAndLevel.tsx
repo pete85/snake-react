@@ -67,7 +67,7 @@ const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGam
     };
 
     return (
-        <div>
+        <div className="hide-mobile">
             {/*<div>*/}
             {/*    <h4>Time: {formatTime(time)}</h4>*/}
             {/*</div>*/}

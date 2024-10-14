@@ -33,13 +33,17 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  min-width: 300px;
   min-height: 100vh;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
 }
 
 button {
@@ -167,4 +171,66 @@ li:hover .hover-show {
           1px -1px 0 theme('colors.gray.600'),
           -1px  1px 0 theme('colors.gray.600'),
           1px  1px 0 theme('colors.gray.600');
+}
+
+@media  screen and (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+  .arrow-buttons-container {
+    display: grid;
+  }
+}
+
+@media  screen and (min-width: 768px) {
+  .hide-mobile {
+    display: block;
+  }
+  .arrow-buttons-container {
+    display: none;
+  }
+}
+
+.arrow-buttons-container {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 5px;
+  width: 160px;
+  height: 160px;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+  button {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    background-color: theme('colors.blue.600');
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  #arrowUpBtn {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+
+  #arrowLeftBtn {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  #arrowDownBtn {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+  }
+
+  #arrowRightBtn {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+  }
 }

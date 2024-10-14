@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
 import TimerAndLevel from "./TimerAndLevel.tsx";
@@ -7,7 +7,11 @@ import {BrowserRouter as Router, Route, Routes, useNavigate} from 'react-router-
 import axios from 'axios';
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import {UserModel} from "./models/user.ts";
-import HighestScores from "./HighestScores.tsx"; // Imported component
+import HighestScores from "./HighestScores.tsx";
+import UsefulLinks from "./UsefulLinks.tsx";
+import {faGithub} from "@fortawesome/free-brands-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChevronDown, faChevronLeft, faChevronRight, faChevronUp} from "@fortawesome/free-solid-svg-icons"; // Imported component
 
 function App() {
     const [user, setUser] = useState<UserModel | null>(null);
@@ -58,6 +62,8 @@ const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<U
     );
 };
 
+
+
 const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispatch<React.SetStateAction<UserModel | null>> }) => {
     const [count, setCount] = useState(0);
     const [level, setLevel] = useState(1);
@@ -65,7 +71,12 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
     const [startGame, setStartGame] = useState(false);
     const [reset, setReset] = useState(false);
     const [gameFinished, setGameFinished] = useState(false);
-    const navigate = useNavigate(); // Initialize navigate
+    const navigate = useNavigate();
+
+    const triggerKeyPress = (key: string) => {
+        const event = new KeyboardEvent('keydown', { key });
+        window.dispatchEvent(event);
+    };
 
     const resetGame = async () => {
         try {
@@ -109,16 +120,17 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
 
     return (
         <>
-            <div className="tw-absolute tw-top-5 tw-left-5">
-                <button onClick={switchUser}>Switch user</button>
-                <div>
+            <div className="tw-relative md:tw-absolute md:tw-top-5 md:tw-left-5">
+                <button onClick={switchUser} className="tw-mb-2">Switch user</button>
+                <div className="tw-flex tw-flex-row tw-gap-5 tw-justify-center tw-items-center md:tw-flex-col tw-mb-2">
                     <h2 className="outlined-text">User: {user?.name}</h2>
-                    <h1 className="outlined-text">Score: {count}</h1>
-                    <h3 className="outlined-text">Highest: {user?.highest_score}</h3>
+                    <h2 className="outlined-text">Score: {count}</h2>
+                    <h3 className="outlined-text hide-mobile">Highest: {user?.highest_score}</h3>
                 </div>
-                <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame} reset={reset} />
+                <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame}
+                               reset={reset}/>
             </div>
-            <div className="tw-absolute tw-right-5 tw-top-5 highest-scores">
+            <div className="tw-absolute tw-right-5 tw-top-5 highest-scores hide-mobile">
                 <HighestScores limit={10} gameFinished={gameFinished}/>
             </div>
             <GridCanvas
@@ -131,6 +143,27 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
                 stopTimer={() => setStopGame(true)}
                 resetTimer={resetGame}
             />
+
+
+                <div className="arrow-buttons-container hide-desktop">
+                    <button id="arrowUpBtn" onClick={() => triggerKeyPress('ArrowUp')}>
+                        <FontAwesomeIcon icon={faChevronUp}/>
+                    </button>
+                    <button id="arrowLeftBtn" onClick={() => triggerKeyPress('ArrowLeft')}>
+                        <FontAwesomeIcon icon={faChevronLeft}/>
+                    </button>
+                    <button id="arrowDownBtn" onClick={() => triggerKeyPress('ArrowDown')}>
+                        <FontAwesomeIcon icon={faChevronDown}/>
+                    </button>
+                    <button id="arrowRightBtn" onClick={() => triggerKeyPress('ArrowRight')}>
+                        <FontAwesomeIcon icon={faChevronRight}/>
+                    </button>
+                </div>
+            {/* Render snake and game logic */}
+
+            <div className="tw-absolute tw-left-0 tw-bottom-0 tw-w-full hide-mobile">
+                <UsefulLinks></UsefulLinks>
+            </div>
         </>
     );
 };
