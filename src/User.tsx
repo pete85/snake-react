@@ -40,7 +40,7 @@ const User: React.FC<UserProps> = ({ setUser, handleUserSubmit, handleUserSearch
                     className="username-input"
                 />
             </div>
-            {existingUsers.length > 0 ? (
+            {(existingUsers.length > 0 && inputValue !== '') ? (
                 <div className="tw-flex tw-w-full">
                     <ul className="user-select-list">
                         {existingUsers.map((user) => (

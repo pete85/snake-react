@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {appConfig} from "./app-config.ts";
 
 type TimerAndLevelProps = {
@@ -72,7 +72,7 @@ const TimerAndLevel: React.FC<TimerAndLevelProps> = ({ level, setLevel, startGam
             {/*    <h4>Time: {formatTime(time)}</h4>*/}
             {/*</div>*/}
             <div>
-                <h4>Level: {level}</h4>
+                <h3 className="outlined-text">Level: {level}</h3>
             </div>
         </div>
     );

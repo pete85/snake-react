@@ -8,7 +8,11 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: theme('colors.slate.800');
+  background-image: url("./assets/snake.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -154,4 +158,13 @@ button:disabled {
 
 li:hover .hover-show {
   display: inline;
+}
+
+.outlined-text {
+  color: theme('colors.white'); /* Set the base color of the text */
+  text-shadow:
+          -1px -1px 0 theme('colors.gray.600'),
+          1px -1px 0 theme('colors.gray.600'),
+          -1px  1px 0 theme('colors.gray.600'),
+          1px  1px 0 theme('colors.gray.600');
 }

@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import {useState} from 'react';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
 import TimerAndLevel from "./TimerAndLevel.tsx";
 import User from "./User.tsx";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import ProtectedRoute from "./ProtectedRoute.tsx";
-import { UserModel } from "./models/user.ts";
+import {UserModel} from "./models/user.ts";
 import HighestScores from "./HighestScores.tsx"; // Imported component
 
 function App() {
@@ -111,16 +111,16 @@ const Game = ({ user, setUser }: { user: UserModel | null; setUser: React.Dispat
         <>
             <div className="tw-absolute tw-top-5 tw-left-5">
                 <button onClick={switchUser}>Switch user</button>
-            </div>
-            <div>
-                <h2>User: {user?.name}</h2>
-                <h1>Score: {count}</h1>
-                <h3>Highest: {user?.highest_score}</h3>
+                <div>
+                    <h2 className="outlined-text">User: {user?.name}</h2>
+                    <h1 className="outlined-text">Score: {count}</h1>
+                    <h3 className="outlined-text">Highest: {user?.highest_score}</h3>
+                </div>
+                <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame} reset={reset} />
             </div>
             <div className="tw-absolute tw-right-5 tw-top-5 highest-scores">
-                <HighestScores limit={10} gameFinished={gameFinished} />
+                <HighestScores limit={10} gameFinished={gameFinished}/>
             </div>
-            <TimerAndLevel level={level} setLevel={setLevel} startGame={startGame} stopGame={stopGame} reset={reset} />
             <GridCanvas
                 setCount={setCount}
                 setLevel={setLevel}
