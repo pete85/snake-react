@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './App.scss';
 import GridCanvas from "./GridCanvas.tsx";
 import TimerAndLevel from "./TimerAndLevel.tsx";
 import User from "./User.tsx";
-import {BrowserRouter as Router, Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter as Router, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import {UserModel} from "./models/user.ts";
 import HighestScores from "./HighestScores.tsx";
 import UsefulLinks from "./UsefulLinks.tsx";
-import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronDown, faChevronLeft, faChevronRight, faChevronUp} from "@fortawesome/free-solid-svg-icons"; // Imported component
 
@@ -23,9 +22,13 @@ function App() {
                 <Route
                     path="/game"
                     element={
-                        <ProtectedRoute user={user}>
-                            <Game user={user} setUser={setUser} />
-                        </ProtectedRoute>
+                        user ? (
+                            <ProtectedRoute user={user}>
+                                <Game user={user} setUser={setUser} />
+                            </ProtectedRoute>
+                        ) : (
+                            <Navigate to="/" replace />
+                        )
                     }
                 />
             </Routes>
@@ -33,10 +36,19 @@ function App() {
     );
 }
 
-const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserModel>> }) => {
+/**
+ * Functional component. setUser stores the selected or newly created user.
+ * @param setUser
+ * @constructor
+ */
+const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<UserModel | null>> }) => {
     const navigate = useNavigate();
-    const [existingUsers, setExistingUsers] = useState<UserModel[]>([]);
+    const [existingUsers, setExistingUsers] = useState<UserModel[]>([]); // state variable initialized as an empty array
 
+    /**
+     * Take name parameter and search for matching records in the db
+     * @param name
+     */
     const handleUserSearch = async (name: string) => {
         try {
             const response = await axios.get(`https://pete85.com:8091/api/snake-game/users/search?name=${name}`);
@@ -46,6 +58,10 @@ const UserSetup = ({ setUser }: { setUser: React.Dispatch<React.SetStateAction<U
         }
     };
 
+    /**
+     * Create new user with given name
+     * @param name
+     */
     const handleUserSubmit = async (name: string) => {
         try {
             const newUser = { name, highest_score: 0, highest_score_date: new Date().toISOString() };

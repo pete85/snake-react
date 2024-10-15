@@ -3,7 +3,7 @@ import { UserModel } from './models/user';
 import {useNavigate} from "react-router-dom";
 
 type UserProps = {
-    setUser: React.Dispatch<React.SetStateAction<UserModel>>;
+    setUser: React.Dispatch<React.SetStateAction<UserModel | null>>;
     handleUserSubmit: (name: string) => void;
     handleUserSearch: (name: string) => void;
     existingUsers: UserModel[];

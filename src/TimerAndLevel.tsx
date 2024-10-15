@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {appConfig} from "./app-config.ts";
 
 type TimerAndLevelProps = {
