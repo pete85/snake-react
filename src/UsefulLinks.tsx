@@ -19,7 +19,7 @@ const UsefulLinks: React.FC = () => {
 
             <button onClick={() => handleRedirect('https://pete85.com')}
                     className="tw-flex tw-items-center tw-justify-center tw-bg-blue-600 tw-text-white tw-py-3 tw-px-4 tw-gap-2 tw-rounded-lg">
-                <img alt="pete85 logo" className="tw-w-5" src="src/assets/pete85_bulb.png"/>
+                <img alt="pete85 logo" className="tw-w-5" src="./assets/pete85_bulb.png"/>
                 <span>pete85</span>
             </button>
 

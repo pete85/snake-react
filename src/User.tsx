@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { UserModel } from './models/user';
+import React, {useState} from 'react';
+import {UserModel} from './models/user';
 import {useNavigate} from "react-router-dom";
 
 type UserProps = {
@@ -9,7 +9,7 @@ type UserProps = {
     existingUsers: UserModel[];
 };
 
-const User: React.FC<UserProps> = ({ setUser, handleUserSubmit, handleUserSearch, existingUsers }) => {
+const User: React.FC<UserProps> = ({setUser, handleUserSubmit, handleUserSearch, existingUsers}) => {
     const [inputValue, setInputValue] = useState('');
     const navigate = useNavigate();
 
@@ -32,13 +32,8 @@ const User: React.FC<UserProps> = ({ setUser, handleUserSubmit, handleUserSearch
     return (
         <>
             <div className="tw-flex tw-w-full">
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleChange}
-                    placeholder="Enter your username"
-                    className="username-input"
-                />
+                <input type="text" value={inputValue} onChange={handleChange} placeholder="Enter your username"
+                       className="username-input"/>
             </div>
             {(existingUsers.length > 0 && inputValue !== '') ? (
                 <div className="tw-flex tw-w-full">
@@ -54,7 +49,8 @@ const User: React.FC<UserProps> = ({ setUser, handleUserSubmit, handleUserSearch
                 </div>
             ) : (
                 <div className="tw-flex tw-w-full">
-                    <button onClick={handleClick} className="tw-w-full" disabled={inputValue === ''}>Create User</button>
+                    <button onClick={handleClick} className="tw-w-full" disabled={inputValue === ''}>Create User
+                    </button>
                 </div>
             )}
         </>
