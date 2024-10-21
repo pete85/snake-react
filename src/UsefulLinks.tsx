@@ -2,6 +2,7 @@ import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGithub, faReact} from "@fortawesome/free-brands-svg-icons";
 import {faSprayCan} from "@fortawesome/free-solid-svg-icons";
+import pete85_bulb from './assets/pete85_bulb.png';
 
 const UsefulLinks: React.FC = () => {
 
@@ -19,7 +20,7 @@ const UsefulLinks: React.FC = () => {
 
             <button onClick={() => handleRedirect('https://pete85.com')}
                     className="tw-flex tw-items-center tw-justify-center tw-bg-blue-600 tw-text-white tw-py-3 tw-px-4 tw-gap-2 tw-rounded-lg">
-                <img alt="pete85 logo" className="tw-w-5" src="./assets/pete85_bulb.png"/>
+                <img alt="pete85 logo" className="tw-w-5" src={pete85_bulb}/>
                 <span>pete85</span>
             </button>
 
